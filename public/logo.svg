@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 110" role="img" aria-labelledby="title desc">
+  <title id="title">Nopeflix</title>
+  <desc id="desc">A mirrored N and small o in electric blue followed by peflix in white.</desc>
+  <rect width="420" height="110" fill="none"/>
+  <g fill="#29a7ff" font-family="Arial Black, Arial, sans-serif" font-weight="900">
+    <text x="-88" y="82" font-size="86" transform="scale(-1 1)">N</text>
+    <text x="88" y="82" font-size="50">o</text>
+  </g>
+  <text x="124" y="82" fill="#f8fbff" font-family="Arial, sans-serif" font-size="62" font-weight="800" letter-spacing="-3">peflix</text>
+</svg>
