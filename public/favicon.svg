@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="26" fill="#05070d"/>
+  <circle cx="64" cy="64" r="52" fill="#0b1220" stroke="#29a7ff" stroke-width="3"/>
+  <g fill="#29a7ff" font-family="Arial Black, Arial, sans-serif" font-weight="900">
+    <text x="-78" y="83" font-size="72" transform="scale(-1 1)">N</text>
+    <text x="76" y="82" font-size="28">o</text>
+  </g>
+</svg>
