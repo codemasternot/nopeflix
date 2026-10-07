@@ -256,17 +256,6 @@ export default function App() {
         );
       });
 
-      const desktop = window.matchMedia("(min-width: 900px)").matches;
-      if (desktop && storyRef.current) {
-        ScrollTrigger.create({
-          trigger: storyRef.current,
-          start: "top 18%",
-          end: "bottom 74%",
-          pin: ".story-copy",
-          pinSpacing: false,
-        });
-      }
-
       gsap.utils.toArray(".story-card img").forEach((img) => {
         gsap.fromTo(
           img,
