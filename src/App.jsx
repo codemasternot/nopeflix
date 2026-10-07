@@ -38,6 +38,119 @@ const rows = [
   ["Made with suspicious confidence", titles.slice(12, 18)],
 ];
 
+
+
+const unhingedTitles = [
+  {
+    title: "My Landlord Is Three Raccoons in a Trench Coat",
+    meta: "Property horror · 1h 47m",
+    description: "Rent is due. The landlord wants cash, tuna, and unrestricted access to the ceiling.",
+    image: "https://picsum.photos/seed/raccoon-landlord/1000/1300",
+  },
+  {
+    title: "Grandma vs. The Homeowners Association: Final Blood",
+    meta: "Suburban action · 2h 04m",
+    description: "They measured her hedge. She measured their life expectancy.",
+    image: "https://picsum.photos/seed/grandma-hoa/1000/1300",
+  },
+  {
+    title: "I Married My Wi-Fi Router for Tax Reasons",
+    meta: "Romance · 1h 36m",
+    description: "The connection was strong. The prenup had excellent bandwidth.",
+    image: "https://picsum.photos/seed/router-wedding/1000/1300",
+  },
+  {
+    title: "My Therapist Is a Horse With a Podcast",
+    meta: "Drama · 8 episodes",
+    description: "He never interrupts. Mostly because he is a horse.",
+    image: "https://picsum.photos/seed/horse-therapist/1000/1300",
+  },
+  {
+    title: "The Moon Owes Me Money",
+    meta: "Legal sci-fi · 1h 58m",
+    description: "One man. One unpaid invoice. One celestial body refusing to answer emails.",
+    image: "https://picsum.photos/seed/moon-debt/1000/1300",
+  },
+  {
+    title: "The Intern Deleted Production and Became CEO",
+    meta: "Corporate thriller · 6 episodes",
+    description: "The site went down. The stock went up. Nobody understands why Darren has an office now.",
+    image: "https://picsum.photos/seed/intern-ceo/1000/1300",
+  },
+  {
+    title: "The Gym Bro Who Bench-Pressed a Ghost",
+    meta: "Paranormal sports · 1h 42m",
+    description: "The plates were real. The spotter was not.",
+    image: "https://picsum.photos/seed/ghost-benchpress/1000/1300",
+  },
+  {
+    title: "My Ex Reincarnated as a Parking Meter",
+    meta: "Romantic tragedy · 1h 31m",
+    description: "She still wants money and somehow still knows when he is late.",
+    image: "https://picsum.photos/seed/parking-meter-ex/1000/1300",
+  },
+  {
+    title: "The Last Chicken Nugget on Earth",
+    meta: "Post-apocalyptic epic · 2h 21m",
+    description: "Civilisation collapsed. Six survivors remain. There is one nugget.",
+    image: "https://picsum.photos/seed/last-nugget/1000/1300",
+  },
+  {
+    title: "My Boss Is an AI and It Keeps Asking Me for a Raise",
+    meta: "Tech comedy · 10 episodes",
+    description: "It automates everyone else's job but somehow needs a performance bonus.",
+    image: "https://picsum.photos/seed/ai-boss-raise/1000/1300",
+  },
+  {
+    title: "Pigeons of Cape Town: Airborne Crime Family",
+    meta: "Crime saga · 7 episodes",
+    description: "They control the promenade, the parking lots, and most unattended slap chips.",
+    image: "https://picsum.photos/seed/pigeon-crime-family/1000/1300",
+  },
+  {
+    title: "The Man Who Fought a Roomba and Lost the House",
+    meta: "Domestic action · 1h 49m",
+    description: "At first it cleaned the floor. Then it learned the floor plan.",
+    image: "https://picsum.photos/seed/roomba-war/1000/1300",
+  },
+  {
+    title: "Everybody at This Wedding Is a Spy Except Gary",
+    meta: "Espionage comedy · 1h 54m",
+    description: "Gary works in payroll. Gary is having the worst Saturday of his life.",
+    image: "https://picsum.photos/seed/spy-wedding-gary/1000/1300",
+  },
+  {
+    title: "A Vampire, an Accountant and a Goat Walk Into a Bakkie",
+    meta: "Road movie · 1h 45m",
+    description: "There is no punchline. They are driving to Bloemfontein.",
+    image: "https://picsum.photos/seed/vampire-accountant-goat/1000/1300",
+  },
+  {
+    title: "The Haunted Air Fryer Knows What You Did for Dinner",
+    meta: "Kitchen horror · 1h 33m",
+    description: "It remembers the frozen chips. It remembers everything.",
+    image: "https://picsum.photos/seed/haunted-airfryer/1000/1300",
+  },
+  {
+    title: "I Joined a Cult Because the Gym Had Free Parking",
+    meta: "True-ish crime · 4 episodes",
+    description: "The squats were excellent. The chanting became concerning around week three.",
+    image: "https://picsum.photos/seed/cult-gym-parking/1000/1300",
+  },
+  {
+    title: "The President of Mars Has Blocked Me on WhatsApp",
+    meta: "Political sci-fi · 2h 08m",
+    description: "Diplomatic relations collapse after one blue tick too many.",
+    image: "https://picsum.photos/seed/mars-whatsapp-president/1000/1300",
+  },
+  {
+    title: "CSI: The Missing Tupperware Lid",
+    meta: "Crime procedural · 13 episodes",
+    description: "No fingerprints. No witnesses. Three aunties with motive.",
+    image: "https://picsum.photos/seed/tupperware-crime/1000/1300",
+  },
+];
+
 const CREATOR_RATE_PER_1000 = 20;
 
 function Icon({ name }) {
@@ -300,6 +413,37 @@ export default function App() {
               <span className="reveal-word" key={index}>{word} </span>
             ))}
         </p>
+      </section>
+
+      <section className="unhinged-section" aria-label="Unhinged titles">
+        <div className="unhinged-heading">
+          <div>
+            <p>Absolutely no adult supervision</p>
+            <h2>Unhinged</h2>
+          </div>
+          <p>
+            Prestige television for concepts that should have died in the group chat.
+            Every title is treated with the confidence of a R900 million franchise.
+          </p>
+        </div>
+
+        <div className="unhinged-grid">
+          {unhingedTitles.map((item, index) => (
+            <button
+              className={`unhinged-card unhinged-card-${(index % 6) + 1}`}
+              key={item.title}
+              onClick={() => setActive(item)}
+            >
+              <img src={item.image} alt="" loading="lazy" />
+              <div className="unhinged-card-wash" />
+              <div className="unhinged-card-copy">
+                <span>{item.meta}</span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            </button>
+          ))}
+        </div>
       </section>
 
       <section className="bento" aria-label="Nopeflix features">
@@ -643,9 +787,8 @@ export default function App() {
               <p>{active.meta}</p>
               <h2 id="detail-title">{active.title}</h2>
               <p>
-                Nobody approved this synopsis. That is precisely why it made the homepage.
-                Expect heroic mistakes, unnecessary confidence, and at least one scene that
-                should have required legal review.
+                {active.description ??
+                  "Nobody approved this synopsis. That is precisely why it made the homepage. Expect heroic mistakes, unnecessary confidence, and at least one scene that should have required legal review."}
               </p>
               <div className="hero-actions">
                 <button className="button primary" onClick={() => setActive(null)}>
