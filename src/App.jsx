@@ -38,6 +38,8 @@ const rows = [
   ["Made with suspicious confidence", titles.slice(12, 18)],
 ];
 
+const CREATOR_RATE_PER_1000 = 20;
+
 function Icon({ name }) {
   const paths = {
     play: <path d="M8 5v14l11-7z" />,
@@ -45,6 +47,9 @@ function Icon({ name }) {
     search: <path d="m20 20-4.5-4.5M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z" />,
     close: <path d="m6 6 12 12M18 6 6 18" />,
     check: <path d="m5 12 4.2 4.2L19 6.8" />,
+    upload: <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 15v4h14v-4" />,
+    user: <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 8a7 7 0 0 0-14 0" />,
+    shield: <path d="M12 3 5.5 5.6v5.8c0 4.1 2.7 7.8 6.5 9.6 3.8-1.8 6.5-5.5 6.5-9.6V5.6L12 3Zm-3 9 2 2 4-4" />,
   };
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="icon">
@@ -83,6 +88,20 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [saved, setSaved] = useState(new Set([1, 8]));
   const [active, setActive] = useState(null);
+  const [creatorOpen, setCreatorOpen] = useState(false);
+  const [creatorTab, setCreatorTab] = useState("apply");
+  const [creatorStatus, setCreatorStatus] = useState("not_applied");
+  const [creatorViews, setCreatorViews] = useState(100000);
+  const [creatorApplication, setCreatorApplication] = useState({
+    name: "",
+    email: "",
+    channel: "",
+    category: "Comedy",
+    pitch: "",
+  });
+  const [uploadTitle, setUploadTitle] = useState("");
+  const [uploadFile, setUploadFile] = useState(null);
+  const [uploadMessage, setUploadMessage] = useState("");
 
   const filteredRows = useMemo(() => {
     if (!query.trim()) return rows;
@@ -156,6 +175,29 @@ export default function App() {
     return () => ctx.revert();
   }, []);
 
+  const estimatedCreatorEarnings = (creatorViews / 1000) * CREATOR_RATE_PER_1000;
+
+  const submitCreatorApplication = (event) => {
+    event.preventDefault();
+    setCreatorStatus("pending");
+    setCreatorTab("dashboard");
+  };
+
+  const submitCreatorUpload = (event) => {
+    event.preventDefault();
+    if (creatorStatus !== "verified") {
+      setUploadMessage("Your creator account must be verified before uploads can be submitted.");
+      return;
+    }
+    if (!uploadTitle.trim() || !uploadFile) {
+      setUploadMessage("Add a title and choose a video file first.");
+      return;
+    }
+    setUploadMessage(`${uploadTitle} is queued for moderation in this prototype.`);
+    setUploadTitle("");
+    setUploadFile(null);
+  };
+
   const toggleSaved = (id) => {
     setSaved((current) => {
       const next = new Set(current);
@@ -175,6 +217,7 @@ export default function App() {
           <div className="nav-links">
             <a href="#browse">Browse</a>
             <a href="#unhinged">Unhinged</a>
+            <a href="#creators">Creators</a>
             <a href="#my-nope">My Nope <span>{saved.size}</span></a>
           </div>
           <label className="search-box">
@@ -333,6 +376,76 @@ export default function App() {
         </div>
       </section>
 
+
+      <section className="creator-section" id="creators">
+        <div className="creator-intro">
+          <p className="creator-eyebrow">Nopeflix Creator Program</p>
+          <h2>Make weird things. Get verified. Get paid when people watch.</h2>
+          <p className="creator-copy">
+            Independent filmmakers, animators, sketch creators and small studios can apply for a verified creator account.
+            Approved creators can submit original videos for moderation and earn from qualified views.
+          </p>
+          <div className="creator-actions">
+            <button
+              className="button creator-primary"
+              onClick={() => {
+                setCreatorTab("apply");
+                setCreatorOpen(true);
+              }}
+            >
+              <Icon name="user" /> Apply to become verified
+            </button>
+            <button
+              className="button creator-secondary"
+              onClick={() => {
+                setCreatorTab("upload");
+                setCreatorOpen(true);
+              }}
+            >
+              <Icon name="upload" /> Creator Studio
+            </button>
+          </div>
+          <p className="creator-fineprint">
+            Demo rate: R{CREATOR_RATE_PER_1000} per 1,000 qualified views. Final payout rules, fraud controls,
+            tax treatment, eligibility and payment timing must be defined before live monetisation.
+          </p>
+        </div>
+
+        <div className="creator-grid">
+          <article className="creator-card creator-rate-card">
+            <div className="creator-icon"><Icon name="shield" /></div>
+            <p>Verified creators only</p>
+            <strong>R{CREATOR_RATE_PER_1000}</strong>
+            <span>per 1,000 qualified views</span>
+          </article>
+
+          <article className="creator-card creator-calculator">
+            <p>Earnings simulator</p>
+            <h3>{Number(creatorViews).toLocaleString()} views</h3>
+            <input
+              type="range"
+              min="1000"
+              max="1000000"
+              step="1000"
+              value={creatorViews}
+              onChange={(event) => setCreatorViews(Number(event.target.value))}
+              aria-label="Example creator views"
+            />
+            <div>
+              <span>Estimated earnings</span>
+              <strong>R{estimatedCreatorEarnings.toLocaleString(undefined, { maximumFractionDigits: 0 })}</strong>
+            </div>
+          </article>
+
+          <article className="creator-card creator-steps">
+            <div><span>01</span><p>Apply with your creator profile and content pitch.</p></div>
+            <div><span>02</span><p>Pass identity, rights and originality review.</p></div>
+            <div><span>03</span><p>Upload original videos to the Creator Studio.</p></div>
+            <div><span>04</span><p>Earn from qualified views after moderation.</p></div>
+          </article>
+        </div>
+      </section>
+
       <section className="saved-section" id="my-nope">
         <div>
           <p>My Nope</p>
@@ -353,6 +466,171 @@ export default function App() {
         <p>Fictional streaming concept. Distinct branding, wildly unserious catalogue.</p>
         <span>Built for terrible movie-night judgement.</span>
       </footer>
+
+
+      {creatorOpen && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setCreatorOpen(false)}>
+          <section className="creator-modal" role="dialog" aria-modal="true" aria-labelledby="creator-modal-title" onClick={(event) => event.stopPropagation()}>
+            <button className="modal-close" onClick={() => setCreatorOpen(false)} aria-label="Close">
+              <Icon name="close" />
+            </button>
+
+            <div className="creator-modal-top">
+              <p>Creator Studio</p>
+              <h2 id="creator-modal-title">Your strange idea deserves an audience.</h2>
+              <div className="creator-tabs">
+                <button className={creatorTab === "apply" ? "active" : ""} onClick={() => setCreatorTab("apply")}>Apply</button>
+                <button className={creatorTab === "upload" ? "active" : ""} onClick={() => setCreatorTab("upload")}>Upload</button>
+                <button className={creatorTab === "dashboard" ? "active" : ""} onClick={() => setCreatorTab("dashboard")}>Dashboard</button>
+              </div>
+            </div>
+
+            {creatorTab === "apply" && (
+              <form className="creator-form" onSubmit={submitCreatorApplication}>
+                <label>
+                  Creator or studio name
+                  <input
+                    required
+                    value={creatorApplication.name}
+                    onChange={(event) => setCreatorApplication({ ...creatorApplication, name: event.target.value })}
+                    placeholder="e.g. Bad Decisions Pictures"
+                  />
+                </label>
+                <label>
+                  Email
+                  <input
+                    required
+                    type="email"
+                    value={creatorApplication.email}
+                    onChange={(event) => setCreatorApplication({ ...creatorApplication, email: event.target.value })}
+                    placeholder="creator@example.com"
+                  />
+                </label>
+                <label>
+                  Existing channel or portfolio
+                  <input
+                    value={creatorApplication.channel}
+                    onChange={(event) => setCreatorApplication({ ...creatorApplication, channel: event.target.value })}
+                    placeholder="Website, YouTube, Vimeo or portfolio URL"
+                  />
+                </label>
+                <label>
+                  Primary category
+                  <select
+                    value={creatorApplication.category}
+                    onChange={(event) => setCreatorApplication({ ...creatorApplication, category: event.target.value })}
+                  >
+                    <option>Comedy</option>
+                    <option>Film</option>
+                    <option>Animation</option>
+                    <option>Documentary</option>
+                    <option>Horror</option>
+                    <option>Experimental</option>
+                    <option>Series</option>
+                  </select>
+                </label>
+                <label className="creator-form-wide">
+                  Tell us what you want to make
+                  <textarea
+                    required
+                    rows="5"
+                    value={creatorApplication.pitch}
+                    onChange={(event) => setCreatorApplication({ ...creatorApplication, pitch: event.target.value })}
+                    placeholder="The stranger the better. Tell us the concept, format and why people will watch."
+                  />
+                </label>
+                <label className="creator-consent creator-form-wide">
+                  <input type="checkbox" required />
+                  <span>I confirm I own or control the rights to content I submit and can provide verification if requested.</span>
+                </label>
+                <button className="button primary creator-form-wide" type="submit">
+                  Submit creator application
+                </button>
+              </form>
+            )}
+
+            {creatorTab === "upload" && (
+              <form className="creator-upload" onSubmit={submitCreatorUpload}>
+                <div className={`verification-banner ${creatorStatus}`}>
+                  <Icon name="shield" />
+                  <div>
+                    <strong>
+                      {creatorStatus === "verified"
+                        ? "Verified creator"
+                        : creatorStatus === "pending"
+                          ? "Verification pending"
+                          : "Verification required"}
+                    </strong>
+                    <p>
+                      {creatorStatus === "verified"
+                        ? "Your account can submit videos for moderation."
+                        : creatorStatus === "pending"
+                          ? "We have your application. Uploads unlock after approval."
+                          : "Apply first. Only approved creators can publish or monetise videos."}
+                    </p>
+                  </div>
+                </div>
+                <label>
+                  Video title
+                  <input
+                    value={uploadTitle}
+                    onChange={(event) => setUploadTitle(event.target.value)}
+                    placeholder="The Accountant Who Knew Karate"
+                    disabled={creatorStatus !== "verified"}
+                  />
+                </label>
+                <label className="upload-drop">
+                  <Icon name="upload" />
+                  <strong>{uploadFile ? uploadFile.name : "Choose a video file"}</strong>
+                  <span>MP4, MOV or WebM. File is not uploaded anywhere in this front-end prototype.</span>
+                  <input
+                    type="file"
+                    accept="video/mp4,video/quicktime,video/webm"
+                    onChange={(event) => setUploadFile(event.target.files?.[0] ?? null)}
+                    disabled={creatorStatus !== "verified"}
+                  />
+                </label>
+                <button className="button primary" type="submit" disabled={creatorStatus !== "verified"}>
+                  Submit for moderation
+                </button>
+                {uploadMessage && <p className="upload-message">{uploadMessage}</p>}
+              </form>
+            )}
+
+            {creatorTab === "dashboard" && (
+              <div className="creator-dashboard">
+                <div className={`verification-banner ${creatorStatus}`}>
+                  <Icon name="shield" />
+                  <div>
+                    <strong>
+                      {creatorStatus === "verified"
+                        ? "Verified"
+                        : creatorStatus === "pending"
+                          ? "Application under review"
+                          : "Not yet applied"}
+                    </strong>
+                    <p>
+                      {creatorStatus === "pending"
+                        ? "Your application has been captured in this prototype. A real launch will require server-side review and notifications."
+                        : "Creator status will appear here."}
+                    </p>
+                  </div>
+                </div>
+                <div className="dashboard-stats">
+                  <article><span>Qualified views</span><strong>0</strong></article>
+                  <article><span>Rate</span><strong>R{CREATOR_RATE_PER_1000}/1K</strong></article>
+                  <article><span>Estimated balance</span><strong>R0</strong></article>
+                </div>
+                {creatorStatus === "pending" && (
+                  <button className="demo-verify" onClick={() => setCreatorStatus("verified")}>
+                    Preview verified creator state
+                  </button>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+      )}
 
       {active && (
         <div className="modal-backdrop" role="presentation" onClick={() => setActive(null)}>
